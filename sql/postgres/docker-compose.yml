@@ -1,0 +1,18 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: banco_horadoqa_postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: banco_horadoqa
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+      TZ: America/Sao_Paulo
+    volumes:
+      - banco_horadoqa_postgres_data:/var/lib/postgresql/data
+      - ./init-db:/docker-entrypoint-initdb.d # scripts SQL para inicialização automática
+
+volumes:
+  banco_horadoqa_postgres_data:

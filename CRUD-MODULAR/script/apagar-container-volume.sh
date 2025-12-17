@@ -1,0 +1,1 @@
+docker-compose down -v && docker rmi $(docker images -a -q)
