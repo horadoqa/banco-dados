@@ -1,5 +1,13 @@
 const db = require('../db');
 
+// ======================
+// Função de validação
+// ======================
+const isEmailValido = (email) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
 const criarCandidato = async (req, res) => {
   const client = await db.connect();
 
@@ -33,6 +41,18 @@ const criarCandidato = async (req, res) => {
       await client.query('ROLLBACK');
       return res.status(400).json({
         message: 'Todos os campos são obrigatórios, incluindo ao menos um endereço'
+      });
+    }
+
+    // ======================
+    // Validação de email
+    // ======================
+    const emailNormalizado = email.trim().toLowerCase();
+
+    if (!isEmailValido(emailNormalizado)) {
+      await client.query('ROLLBACK');
+      return res.status(400).json({
+        message: 'Email inválido'
       });
     }
 
@@ -72,7 +92,7 @@ const criarCandidato = async (req, res) => {
         cpf,
         data_nascimento,
         estado_civil,
-        email,
+        emailNormalizado,
         telefone
       ]
     );
