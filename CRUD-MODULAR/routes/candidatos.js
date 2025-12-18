@@ -4,7 +4,8 @@ const router = express.Router();
 const { criarCandidato } = require('../controllers/candidatosController');
 const { listarCandidatos } = require('../controllers/listarCandidatosController');
 const { excluirCandidato } = require('../controllers/excluirCandidatoController');
-const { buscarCandidatoPorId } = require('../controllers/buscarCandidatoPorId');
+const { buscarCandidatoPorCpf } = require('../controllers/buscarCandidatoPorCpf');
+
 
 // Criar candidatos
 router.post('/', criarCandidato);
@@ -12,8 +13,8 @@ router.post('/', criarCandidato);
 // Listar todos os candidatos
 router.get('/', listarCandidatos);
 
-// Buscar candidato pelo ID
-router.get('/:id', buscarCandidatoPorId);
+// Buscar candidato pelo CPF
+router.get('/cpf/:cpf', buscarCandidatoPorCpf);
 
 // Excluir candidato pelo ID
 router.delete('/:id', excluirCandidato);

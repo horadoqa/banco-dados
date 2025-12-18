@@ -1,7 +1,7 @@
 const db = require('../db');
 
-const buscarCandidatoPorId = async (req, res) => {
-  const { id } = req.params;
+const buscarCandidatoPorCpf = async (req, res) => {
+  const cpf = req.params.cpf.replace(/\D/g, '');
 
   try {
     const { rows } = await db.query(
@@ -33,10 +33,10 @@ const buscarCandidatoPorId = async (req, res) => {
         ) AS enderecos
       FROM candidatos c
       LEFT JOIN enderecos e ON e.candidato_id = c.id
-      WHERE c.id = $1
+      WHERE c.cpf = $1
       GROUP BY c.id
       `,
-      [id]
+      [cpf]
     );
 
     if (rows.length === 0) {
@@ -46,8 +46,8 @@ const buscarCandidatoPorId = async (req, res) => {
     res.json(rows[0]);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Erro ao buscar candidato' });
+    res.status(500).json({ error: 'Erro ao buscar candidato por CPF' });
   }
 };
 
-module.exports = { buscarCandidatoPorId };
+module.exports = { buscarCandidatoPorCpf };
