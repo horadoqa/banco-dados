@@ -1,8 +1,11 @@
 const db = require('../db');
 
-const listarCandidatos = async (req, res) => {
+const buscarCandidatoPorId = async (req, res) => {
+  const { id } = req.params;
+
   try {
-    const { rows } = await db.query(`
+    const { rows } = await db.query(
+      `
       SELECT
         c.id,
         c.nome_completo,
@@ -30,15 +33,21 @@ const listarCandidatos = async (req, res) => {
         ) AS enderecos
       FROM candidatos c
       LEFT JOIN enderecos e ON e.candidato_id = c.id
+      WHERE c.id = $1
       GROUP BY c.id
-      ORDER BY c.nome_completo
-    `);
+      `,
+      [id]
+    );
 
-    res.json({ candidatos: rows });
+    if (rows.length === 0) {
+      return res.status(404).json({ message: 'Candidato não encontrado' });
+    }
+
+    res.json(rows[0]);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Erro ao listar candidatos' });
+    res.status(500).json({ error: 'Erro ao buscar candidato' });
   }
 };
 
-module.exports = { listarCandidatos };
+module.exports = { buscarCandidatoPorId };
